@@ -1,0 +1,11 @@
+current_image:
+  filename: c8000aep-universalk9.17.12.02.SPA.bin
+  md5: 6c376c43720b8cfacbbc3a0228563568
+  sha512: 1d2173a4b7d7a8db995c32313511415b811d955b16ebb25514c50e57f347452b6bdef48621fd484a0ba6288fa0c060b4e0fd925f134d529451b975a93b453c69
+new_image:
+  new_image: c8000aep-universalk9.17.12.04a.SPA.bin
+  md5: c66989728482e5537a6d1504272eaf68
+  sha512: 3f7709b031e62ded4a0ee3a2da929a7f157d3a2cf1b7733212148ccfba5921d5ff720bf9df1cb32b21fbbe8eb38aa8171032e25a928b902be7c0e547d7fcb27b
+transfer_protocol: sftp
+router_file_system: bootflash
+source_server: 10.10.10.1

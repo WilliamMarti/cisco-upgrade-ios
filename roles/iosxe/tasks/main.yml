@@ -1,0 +1,43 @@
+- name: Download IOS Image from SCP Server
+  cisco.ios.ios_command:
+    commands: 
+      "copy {{ transfer_protocol }}://{{ source_server }}/{{ new_image.filename }} {{ router_file_system}}:{{ new_image.filename }}"
+
+- name: Verify MD5/SHA5121 IOS Imaage Integrity
+  cisco.ios.ios_command:
+    commands: 
+     - "verify /md5 {{ router_file_system}}:{{ new_image.filename }} {{new_image.md5}}"
+     - "verify /md5 {{ router_file_system}}:{{ current_image.filename }} {{current_image.md5}}"
+     - "verify /sha512 {{ router_file_system}}:{{ new_image.filename }} {{new_image.sha512}}"
+     - "verify /sha512 {{ router_file_system}}:{{ current_image.filename }} {{current_image.sha512}}"
+    wait_for: 
+      - result[0] contains Verified
+      - result[1] contains Verified
+      - result[2] contains Verified
+      - result[3] contains Verified
+
+
+- name: Check IOS Images Exist on the Filesystem
+  cisco.ios.ios_command:
+    commands: 
+      - "dir | i {{ new_image.filename}}"
+      - "dir | i {{ current_image.filename}}"
+    wait_for:
+      - result[0] contains {{ new_image.filename}}
+      - result[1] contains {{ current_image.filename}}
+
+- name: Set Boot System
+  cisco.ios.ios_config:
+    lines:
+      - no boot system
+      - boot system flash {{ router_file_system }}:{{ new_image.filename }}
+      - boot system flash {{ router_file_system }}:{{ current_image.filename }}
+    save_when: modified
+
+- name: Verify Boot Settings
+  cisco.ios.ios_command:
+    commands: 
+      "show running-config | i boot system"
+    wait_for:
+      - result[0] contains {{ new_image.filename}}
+      - result[1] contains {{ current_image.filename}}
